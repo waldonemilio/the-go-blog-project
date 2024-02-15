@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web-go-blog: 
+    build: .
+    ports:
+      - "3000:3000" 
+    volumes:
+      - .:/app
+    command: air cmd/main.go -b 0.0.0.0
+
+  #go-blog-api:
+    #build: ./go-blog-api
+    #ports:
+      #- "8080:8080"
+    #depends_on:
+      #- db  
+    #volumes:  
+      #- ./go-blog-api:/app 
+
+  #db:  # Example using PostgreSQL - adjust if needed
+    #image: postgres:alpine
+    #ports:
+      #- "5432:5432"
+    # ... (environment variables, volumes, etc.)

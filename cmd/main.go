@@ -1,19 +1,30 @@
 package main
 
 import (
+	"log"
+	"html/template"
 	"net/http"
-
-	"github.com/labstack/echo/v4"
 )
 
-func main() {
-	e := echo.New()
-
-	e.GET("/api/v1/posts", getPosts)
-
-	e.Logger.Fatal(e.Start(":3000"))
+type Film struct {
+	Title string
+	Director string
 }
 
-func getPosts(c echo.Context) error {
-	return c.JSON(http.StatusOK, []string{"Post 1", "Post 2", "Post 3"})
+func main() {
+	
+	handler1 := func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("cmd/templates/index.html"))
+		films := map[string][]Film{
+			"Films": {
+				{Title: "The Shawshank Redemption", Director: "Frank Darabont"},
+				{Title: "The Godfather", Director: "Francis Ford Coppola"},
+				{Title: "The Dark Knight", Director: "Christopher Nolan"},
+			},
+		}
+		tmpl.Execute(w, films)
+	}
+
+	http.HandleFunc("/", handler1)
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
